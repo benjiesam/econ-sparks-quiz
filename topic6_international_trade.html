@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Econ Sparks – International Trade and Globalisation</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--bg:#0f1117;--surface:#181c27;--card:#1e2336;--border:#2e3451;--accent:#fb923c;--accent-dim:rgba(251,146,60,0.12);--text:#e8eaf2;--muted:#8b90a8;--green:#3ecf8e;--green-dim:rgba(62,207,142,0.12);--red:#f06060;--red-dim:rgba(240,96,96,0.12);--radius:14px}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:32px 16px 64px}
+  header{text-align:center;margin-bottom:40px}
+  .tag{display:inline-block;background:var(--accent-dim);color:var(--accent);font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:4px 12px;border-radius:20px;margin-bottom:14px;border:1px solid rgba(251,146,60,0.25)}
+  h1{font-family:'Playfair Display',serif;font-size:clamp(22px,5vw,36px);color:var(--text);line-height:1.2;margin-bottom:8px}
+  .subtitle{color:var(--muted);font-size:15px;font-weight:300}
+  .progress-wrap{width:100%;max-width:680px;margin-bottom:28px}
+  .progress-info{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:8px}
+  .progress-track{height:4px;background:var(--border);border-radius:4px;overflow:hidden}
+  .progress-fill{height:100%;background:var(--accent);border-radius:4px;transition:width .4s ease}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:36px 36px 28px;width:100%;max-width:680px;margin-bottom:20px}
+  .q-meta{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+  .q-num{background:var(--accent);color:#2e1000;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px}
+  .q-year{color:var(--muted);font-size:12px}
+  .q-text{font-size:16px;line-height:1.65;color:var(--text);margin-bottom:20px}
+  .diagram-wrap{background:#fff;border-radius:10px;padding:20px 16px;margin-bottom:22px;display:flex;justify-content:center;align-items:center}
+  .options{display:flex;flex-direction:column;gap:10px}
+  .option{display:flex;align-items:flex-start;gap:14px;padding:14px 18px;border-radius:10px;border:1px solid var(--border);background:var(--surface);cursor:pointer;transition:all .18s ease;text-align:left;width:100%;font-family:'DM Sans',sans-serif;color:var(--text);font-size:15px;line-height:1.5}
+  .option:hover:not(:disabled){border-color:var(--accent);background:var(--accent-dim)}
+  .option-letter{width:26px;height:26px;min-width:26px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--muted);transition:all .18s ease;margin-top:1px}
+  .option.correct{border-color:var(--green);background:var(--green-dim)}
+  .option.correct .option-letter{background:var(--green);color:#0d2e1e}
+  .option.wrong{border-color:var(--red);background:var(--red-dim)}
+  .option.wrong .option-letter{background:var(--red);color:#2e0d0d}
+  .option:disabled{cursor:default}
+  .feedback{margin-top:18px;padding:14px 18px;border-radius:10px;font-size:14px;line-height:1.5;display:none}
+  .feedback.show{display:block}
+  .feedback.correct-fb{background:var(--green-dim);border:1px solid rgba(62,207,142,0.3);color:var(--green)}
+  .feedback.wrong-fb{background:var(--red-dim);border:1px solid rgba(240,96,96,0.3);color:#f09090}
+  .nav{display:flex;gap:12px;width:100%;max-width:680px;justify-content:space-between;align-items:center}
+  .btn{padding:12px 28px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all .18s ease}
+  .btn-primary{background:var(--accent);color:#2e1000}
+  .btn-primary:hover{opacity:.88}
+  .btn-primary:disabled{opacity:.4;cursor:default}
+  .btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}
+  .btn-ghost:hover{color:var(--text);border-color:var(--muted)}
+  .score-screen{text-align:center;width:100%;max-width:680px;display:none}
+  .score-screen.show{display:block}
+  .score-circle{width:140px;height:140px;border-radius:50%;border:4px solid var(--accent);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 28px}
+  .score-number{font-family:'Playfair Display',serif;font-size:42px;color:var(--accent);line-height:1}
+  .score-total{color:var(--muted);font-size:14px;margin-top:4px}
+  .score-title{font-family:'Playfair Display',serif;font-size:28px;margin-bottom:10px}
+  .score-msg{color:var(--muted);font-size:15px;margin-bottom:32px}
+  .review-list{text-align:left;margin-bottom:32px}
+  .review-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:10px;margin-bottom:8px;font-size:14px;background:var(--card);border:1px solid var(--border)}
+  .dot{width:10px;height:10px;border-radius:50%;min-width:10px}
+  .dot.g{background:var(--green)}.dot.r{background:var(--red)}
+  .review-q{flex:1;color:var(--text)}.review-ans{font-size:12px;color:var(--muted)}
+  #quiz-container{width:100%;display:flex;flex-direction:column;align-items:center}
+</style>
+</head>
+<body>
+<header>
+  <div class="tag">Topic 6</div>
+  <h1>International Trade and Globalisation</h1>
+  <p class="subtitle">IGCSE Economics · Past Paper Questions</p>
+</header>
+<div id="quiz-container">
+  <div class="progress-wrap">
+    <div class="progress-info"><span id="q-counter">Question 1 of 4</span><span id="score-live">Score: 0</span></div>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  </div>
+  <div class="card">
+    <div class="q-meta"><span class="q-num" id="q-label">Q1</span><span class="q-year" id="q-year"></span></div>
+    <p class="q-text" id="q-text"></p>
+    <div id="q-diagram"></div>
+    <div class="options" id="options"></div>
+    <div class="feedback" id="feedback"></div>
+  </div>
+  <div class="nav">
+    <button class="btn btn-ghost" id="btn-prev" onclick="prevQ()">← Previous</button>
+    <button class="btn btn-primary" id="btn-next" onclick="nextQ()">Next →</button>
+  </div>
+</div>
+<div class="score-screen" id="score-screen">
+  <div class="score-circle"><div class="score-number" id="final-score">0</div><div class="score-total" id="final-total">/ 0</div></div>
+  <h2 class="score-title" id="score-title"></h2>
+  <p class="score-msg" id="score-msg"></p>
+  <div class="review-list" id="review-list"></div>
+  <button class="btn btn-primary" onclick="restart()">Try Again</button>
+</div>
+<script>
+const TOPIC="International Trade and Globalisation";
+
+// Exchange rate diagram for Q29
+// US discovers oil => exports oil more, imports less
+// => Demand for $ rises (foreigners buy more $), Supply of $ falls (fewer $ sold for imports)
+// => D shifts right (D to D2), S shifts left (S to S1)
+// => New equilibrium: higher price of $, higher quantity => Point B (up and right of X)
+// Paper layout: S1 (left of S), S (original), S2 (right of S); D1 (left of D), D (original), D2 (right of D)
+// X = original equilibrium. Points A,B,C,D around X
+// Answer B = higher price of $ (appreciation), Answer confirmed
+const SVG_EX = `<div class="diagram-wrap">
+<svg width="310" height="250" viewBox="0 0 310 250" xmlns="http://www.w3.org/2000/svg" font-family="Arial,sans-serif" font-size="10">
+  <defs>
+    <marker id="ah6" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+      <path d="M1 1L9 5L1 9" fill="none" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
+    </marker>
+    <marker id="shift" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+      <path d="M1 1L9 5L1 9" fill="none" stroke="#888" stroke-width="1.5" stroke-linecap="round"/>
+    </marker>
+  </defs>
+  <!-- Axes -->
+  <line x1="40" y1="10" x2="40" y2="215" stroke="#333" stroke-width="1.5" marker-end="url(#ah6)"/>
+  <line x1="40" y1="215" x2="290" y2="215" stroke="#333" stroke-width="1.5" marker-end="url(#ah6)"/>
+  <text x="10" y="118" font-size="10" fill="#333" text-anchor="middle" transform="rotate(-90,10,118)">price of $</text>
+  <text x="275" y="228" font-size="10" fill="#333">quantity of $</text>
+  <text x="32" y="213" font-size="9" fill="#333">O</text>
+
+  <!-- Original S (upward sloping): (80,200) to (200,30) -->
+  <line x1="78" y1="202" x2="202" y2="28" stroke="#e53935" stroke-width="1.8"/>
+  <text x="204" y="26" font-size="11" fill="#e53935" font-weight="bold">S</text>
+
+  <!-- S1 (shifted left of S): (55,200) to (175,30) -->
+  <line x1="53" y1="202" x2="177" y2="28" stroke="#e53935" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.6"/>
+  <text x="179" y="26" font-size="11" fill="#e53935" font-weight="bold" opacity="0.7">S1</text>
+  <!-- Shift arrow S to S1 -->
+  <line x1="130" y1="100" x2="108" y2="100" stroke="#e53935" stroke-width="1" marker-end="url(#shift)" opacity="0.6"/>
+
+  <!-- S2 (shifted right of S): (105,200) to (225,30) -->
+  <line x1="103" y1="202" x2="227" y2="28" stroke="#e53935" stroke-width="1.2" stroke-dasharray="3,4" opacity="0.35"/>
+  <text x="229" y="26" font-size="11" fill="#e53935" font-weight="bold" opacity="0.4">S2</text>
+
+  <!-- Original D (downward sloping): (80,30) to (210,200) -->
+  <line x1="78" y1="28" x2="212" y2="202" stroke="#1a73e8" stroke-width="1.8"/>
+  <text x="214" y="202" font-size="11" fill="#1a73e8" font-weight="bold">D</text>
+
+  <!-- D2 (shifted right of D, demand increases): (105,30) to (240,200) -->
+  <line x1="103" y1="28" x2="240" y2="202" stroke="#1a73e8" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.6"/>
+  <text x="242" y="202" font-size="11" fill="#1a73e8" font-weight="bold" opacity="0.7">D2</text>
+  <!-- Shift arrow D to D2 -->
+  <line x1="158" y1="110" x2="180" y2="110" stroke="#1a73e8" stroke-width="1" marker-end="url(#shift)" opacity="0.6"/>
+
+  <!-- D1 (shifted left): (55,30) to (183,200) -->
+  <line x1="53" y1="28" x2="183" y2="202" stroke="#1a73e8" stroke-width="1.2" stroke-dasharray="3,4" opacity="0.35"/>
+  <text x="185" y="202" font-size="11" fill="#1a73e8" font-weight="bold" opacity="0.4">D1</text>
+
+  <!-- Original equilibrium X: intersection of S and D -->
+  <!-- S: passes (80,200),(200,30). Slope=(30-200)/(200-80)=-170/120. At x=145: y=200+(-170/120)*(145-80)=200-92=108 -->
+  <!-- D: passes (80,30),(210,200). Slope=(200-30)/(210-80)=170/130. At x=145: y=30+(170/130)*(145-80)=30+85=115 -->
+  <!-- Intersection: solve 200-(170/120)(x-80) = 30+(170/130)(x-80) => let u=x-80: 200-1.417u=30+1.308u => 170=2.725u => u=62.4 => x=142.4, y≈111.5 -->
+  <circle cx="143" cy="112" r="5" fill="#333"/>
+  <text x="148" y="108" font-size="12" fill="#333" font-weight="bold">X</text>
+
+  <!-- New equilibrium B: S1 intersects D2 -->
+  <!-- S1: passes (55,200),(175,30). At x: y=200-(170/120)*(x-55) -->
+  <!-- D2: passes (105,30),(240,200). At x: y=30+(170/135)*(x-105) -->
+  <!-- 200-(170/120)(x-55)=30+(170/135)(x-105) => 170=(170/120)(x-55)+(170/135)(x-105) => 1=(x-55)/120+(x-105)/135 -->
+  <!-- 1=135(x-55)/16200+120(x-105)/16200 => 16200=135x-7425+120x-12600 => 16200=255x-20025 => 255x=36225 => x=142.1 -->
+  <!-- y at S1: 200-(170/120)*(142.1-55)=200-123.3=76.7 -->
+  <!-- B is higher price, similar qty — so up from X -->
+  <circle cx="143" cy="77" r="5" fill="#2e7d32"/>
+  <text x="150" y="73" font-size="12" fill="#2e7d32" font-weight="bold">B</text>
+
+  <!-- Points A (higher price, lower qty), C (lower price, higher qty), D (lower price, lower qty) -->
+  <circle cx="100" cy="77" r="4" fill="#555"/>
+  <text x="92" y="73" font-size="12" fill="#555" font-weight="bold">A</text>
+
+  <circle cx="185" cy="148" r="4" fill="#555"/>
+  <text x="190" y="145" font-size="12" fill="#555" font-weight="bold">C</text>
+
+  <circle cx="100" cy="148" r="4" fill="#555"/>
+  <text x="92" y="145" font-size="12" fill="#555" font-weight="bold">D</text>
+
+  <!-- Arrow from X to B -->
+  <line x1="143" y1="107" x2="143" y2="83" stroke="#2e7d32" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#shift)"/>
+</svg></div>`;
+
+const questions=[
+  {year:"Oct/Nov 2025",text:"What is an advantage for consumers from international specialisation?",options:["competition between firms results in lower prices","labour can move more freely between countries","less wealth is created throughout the world","multinational companies can increase their profits"],answer:0},
+  {year:"Oct/Nov 2025",text:"Which government policy would encourage greater international trade?",options:["an increase in the level of domestic regulation","an increase in the level of tariffs on imports","the abolition of domestic subsidies for declining industries","the abolition of free trade agreements"],answer:2},
+  {year:"Oct/Nov 2025",text:"The US currently trades oil with the UK. New oil and gas deposits are discovered in the US — oil imports decrease and oil exports increase. From initial equilibrium point X, which letter shows the new equilibrium point for the US exchange rate?",options:["Point A","Point B","Point C","Point D"],answer:1,svg:SVG_EX},
+  {year:"Oct/Nov 2025",text:"What is most likely to directly result from a persistent and large current account surplus on the balance of payments of a country?",options:["a lower exchange rate","a lower standard of living","an increase in gross domestic product","an increase in the unemployment rate"],answer:2}
+];
+
+let order=[...Array(questions.length).keys()].sort(()=>Math.random()-0.5);
+let current=0,score=0,answered=new Array(questions.length).fill(null),selected=new Array(questions.length).fill(null);
+function render(){
+  const qi=order[current],q=questions[qi],total=questions.length;
+  document.getElementById('q-counter').textContent=`Question ${current+1} of ${total}`;
+  document.getElementById('score-live').textContent=`Score: ${score}`;
+  document.getElementById('progress-fill').style.width=`${(current/total)*100}%`;
+  document.getElementById('q-label').textContent=`Q${current+1}`;
+  document.getElementById('q-year').textContent=q.year;
+  document.getElementById('q-text').textContent=q.text;
+  document.getElementById('q-diagram').innerHTML=q.svg||'';
+  const optEl=document.getElementById('options');optEl.innerHTML='';
+  ['A','B','C','D'].forEach((l,i)=>{
+    const btn=document.createElement('button');btn.className='option';
+    btn.innerHTML=`<span class="option-letter">${l}</span><span>${q.options[i]}</span>`;
+    btn.onclick=()=>choose(i);
+    if(answered[current]!==null){btn.disabled=true;if(i===q.answer)btn.classList.add('correct');else if(i===selected[current])btn.classList.add('wrong');}
+    optEl.appendChild(btn);
+  });
+  const fb=document.getElementById('feedback');
+  if(answered[current]!==null){fb.className='feedback show '+(answered[current]?'correct-fb':'wrong-fb');fb.textContent=answered[current]?'✓ Correct! Well done.':'✗ The correct answer is '+['A','B','C','D'][q.answer]+': '+q.options[q.answer];}
+  else{fb.className='feedback';fb.textContent='';}
+  document.getElementById('btn-prev').style.visibility=current>0?'visible':'hidden';
+  const nb=document.getElementById('btn-next');nb.textContent=current===total-1?'See Results':'Next →';nb.disabled=answered[current]===null;
+}
+function choose(i){if(answered[current]!==null)return;selected[current]=i;answered[current]=i===questions[order[current]].answer;if(answered[current])score++;render();}
+function nextQ(){if(current<questions.length-1){current++;render();}else showResults();}
+function prevQ(){if(current>0){current--;render();}}
+function showResults(){
+  document.getElementById('quiz-container').style.display='none';
+  document.getElementById('score-screen').classList.add('show');
+  const total=questions.length,pct=Math.round((score/total)*100);
+  document.getElementById('final-score').textContent=score;document.getElementById('final-total').textContent=`/ ${total}`;
+  document.getElementById('score-title').textContent=pct===100?'Perfect Score!':pct>=70?'Great Work!':pct>=40?'Keep Practising':'Keep Going!';
+  document.getElementById('score-msg').textContent=`You scored ${score} out of ${total} (${pct}%) on ${TOPIC}.`;
+  const rl=document.getElementById('review-list');rl.innerHTML='';
+  order.forEach((qi,idx)=>{const q=questions[qi];const div=document.createElement('div');div.className='review-item';div.innerHTML=`<div class="dot ${answered[idx]?'g':'r'}"></div><div class="review-q">${q.text.slice(0,80)}${q.text.length>80?'…':''}</div><div class="review-ans">Ans: ${['A','B','C','D'][q.answer]}</div>`;rl.appendChild(div);});
+}
+function restart(){order=[...Array(questions.length).keys()].sort(()=>Math.random()-0.5);current=0;score=0;answered=new Array(questions.length).fill(null);selected=new Array(questions.length).fill(null);document.getElementById('quiz-container').style.display='flex';document.getElementById('score-screen').classList.remove('show');render();}
+render();
+</script>
+</body>
+</html>

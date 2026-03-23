@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Econ Sparks – The Firm and Production</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--bg:#0f1117;--surface:#181c27;--card:#1e2336;--border:#2e3451;--accent:#c084fc;--accent-dim:rgba(192,132,252,0.12);--text:#e8eaf2;--muted:#8b90a8;--green:#3ecf8e;--green-dim:rgba(62,207,142,0.12);--red:#f06060;--red-dim:rgba(240,96,96,0.12);--radius:14px}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:32px 16px 64px}
+  header{text-align:center;margin-bottom:40px}
+  .tag{display:inline-block;background:var(--accent-dim);color:var(--accent);font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:4px 12px;border-radius:20px;margin-bottom:14px;border:1px solid rgba(192,132,252,0.25)}
+  h1{font-family:'Playfair Display',serif;font-size:clamp(24px,5vw,38px);color:var(--text);line-height:1.2;margin-bottom:8px}
+  .subtitle{color:var(--muted);font-size:15px;font-weight:300}
+  .progress-wrap{width:100%;max-width:680px;margin-bottom:28px}
+  .progress-info{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:8px}
+  .progress-track{height:4px;background:var(--border);border-radius:4px;overflow:hidden}
+  .progress-fill{height:100%;background:var(--accent);border-radius:4px;transition:width .4s ease}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:36px 36px 28px;width:100%;max-width:680px;margin-bottom:20px}
+  .q-meta{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+  .q-num{background:var(--accent);color:#1a0d2e;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px}
+  .q-year{color:var(--muted);font-size:12px}
+  .q-text{font-size:16px;line-height:1.65;color:var(--text);margin-bottom:20px}
+  .diagram-wrap{background:#fff;border-radius:10px;padding:20px 16px;margin-bottom:22px;display:flex;justify-content:center;align-items:center}
+  .options{display:flex;flex-direction:column;gap:10px}
+  .option{display:flex;align-items:flex-start;gap:14px;padding:14px 18px;border-radius:10px;border:1px solid var(--border);background:var(--surface);cursor:pointer;transition:all .18s ease;text-align:left;width:100%;font-family:'DM Sans',sans-serif;color:var(--text);font-size:15px;line-height:1.5}
+  .option:hover:not(:disabled){border-color:var(--accent);background:var(--accent-dim)}
+  .option-letter{width:26px;height:26px;min-width:26px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--muted);transition:all .18s ease;margin-top:1px}
+  .option.correct{border-color:var(--green);background:var(--green-dim)}
+  .option.correct .option-letter{background:var(--green);color:#0d2e1e}
+  .option.wrong{border-color:var(--red);background:var(--red-dim)}
+  .option.wrong .option-letter{background:var(--red);color:#2e0d0d}
+  .option:disabled{cursor:default}
+  .feedback{margin-top:18px;padding:14px 18px;border-radius:10px;font-size:14px;line-height:1.5;display:none}
+  .feedback.show{display:block}
+  .feedback.correct-fb{background:var(--green-dim);border:1px solid rgba(62,207,142,0.3);color:var(--green)}
+  .feedback.wrong-fb{background:var(--red-dim);border:1px solid rgba(240,96,96,0.3);color:#f09090}
+  .nav{display:flex;gap:12px;width:100%;max-width:680px;justify-content:space-between;align-items:center}
+  .btn{padding:12px 28px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all .18s ease}
+  .btn-primary{background:var(--accent);color:#1a0d2e}
+  .btn-primary:hover{opacity:.88}
+  .btn-primary:disabled{opacity:.4;cursor:default}
+  .btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}
+  .btn-ghost:hover{color:var(--text);border-color:var(--muted)}
+  .score-screen{text-align:center;width:100%;max-width:680px;display:none}
+  .score-screen.show{display:block}
+  .score-circle{width:140px;height:140px;border-radius:50%;border:4px solid var(--accent);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 28px}
+  .score-number{font-family:'Playfair Display',serif;font-size:42px;color:var(--accent);line-height:1}
+  .score-total{color:var(--muted);font-size:14px;margin-top:4px}
+  .score-title{font-family:'Playfair Display',serif;font-size:28px;margin-bottom:10px}
+  .score-msg{color:var(--muted);font-size:15px;margin-bottom:32px}
+  .review-list{text-align:left;margin-bottom:32px}
+  .review-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:10px;margin-bottom:8px;font-size:14px;background:var(--card);border:1px solid var(--border)}
+  .dot{width:10px;height:10px;border-radius:50%;min-width:10px}
+  .dot.g{background:var(--green)}.dot.r{background:var(--red)}
+  .review-q{flex:1;color:var(--text)}.review-ans{font-size:12px;color:var(--muted)}
+  #quiz-container{width:100%;display:flex;flex-direction:column;align-items:center}
+</style>
+</head>
+<body>
+<header>
+  <div class="tag">Topic 3</div>
+  <h1>The Firm and Production</h1>
+  <p class="subtitle">IGCSE Economics · Past Paper Questions</p>
+</header>
+<div id="quiz-container">
+  <div class="progress-wrap">
+    <div class="progress-info"><span id="q-counter">Question 1 of 6</span><span id="score-live">Score: 0</span></div>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  </div>
+  <div class="card">
+    <div class="q-meta"><span class="q-num" id="q-label">Q1</span><span class="q-year" id="q-year"></span></div>
+    <p class="q-text" id="q-text"></p>
+    <div id="q-diagram"></div>
+    <div class="options" id="options"></div>
+    <div class="feedback" id="feedback"></div>
+  </div>
+  <div class="nav">
+    <button class="btn btn-ghost" id="btn-prev" onclick="prevQ()">← Previous</button>
+    <button class="btn btn-primary" id="btn-next" onclick="nextQ()">Next →</button>
+  </div>
+</div>
+<div class="score-screen" id="score-screen">
+  <div class="score-circle"><div class="score-number" id="final-score">0</div><div class="score-total" id="final-total">/ 0</div></div>
+  <h2 class="score-title" id="score-title"></h2>
+  <p class="score-msg" id="score-msg"></p>
+  <div class="review-list" id="review-list"></div>
+  <button class="btn btn-primary" onclick="restart()">Try Again</button>
+</div>
+<script>
+const TOPIC="The Firm and Production";
+
+// Cost diagram: y-axis = cost ($000s) from 0 to 65, x-axis = output 0 to 110
+// Fixed cost = horizontal line at $10,000
+// Total cost line rises from $10,000 at output 0 to $60,000 at output 100
+// Variable cost at output 100 = TC - FC = 60,000 - 10,000 = $50,000
+const SVG_COST = `<div class="diagram-wrap">
+<svg width="280" height="230" viewBox="0 0 280 230" xmlns="http://www.w3.org/2000/svg" font-family="Arial,sans-serif" font-size="10">
+  <defs>
+    <marker id="ah3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+      <path d="M1 1L9 5L1 9" fill="none" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
+    </marker>
+  </defs>
+  <!-- Axes -->
+  <line x1="45" y1="10" x2="45" y2="200" stroke="#333" stroke-width="1.5" marker-end="url(#ah3)"/>
+  <line x1="45" y1="200" x2="260" y2="200" stroke="#333" stroke-width="1.5" marker-end="url(#ah3)"/>
+  <!-- Axis labels -->
+  <text x="12" y="110" font-size="10" fill="#333" text-anchor="middle" transform="rotate(-90,12,110)">cost ($000s)</text>
+  <text x="252" y="214" font-size="10" fill="#333">output</text>
+  <text x="37" y="197" font-size="9" fill="#333">O</text>
+
+  <!-- Y-axis tick marks and labels -->
+  <!-- Scale: $0 at y=200, $65k at y=10 => 190px for 65k => 1k = 2.92px -->
+  <!-- $10k at y=200-29=171, $20k at y=142, $30k at y=113, $40k at y=84, $50k at y=55, $60k at y=26 -->
+  <line x1="42" y1="171" x2="48" y2="171" stroke="#333" stroke-width="1"/>
+  <text x="40" y="174" font-size="9" fill="#555" text-anchor="end">10</text>
+  <line x1="42" y1="142" x2="48" y2="142" stroke="#333" stroke-width="1"/>
+  <text x="40" y="145" font-size="9" fill="#555" text-anchor="end">20</text>
+  <line x1="42" y1="113" x2="48" y2="113" stroke="#333" stroke-width="1"/>
+  <text x="40" y="116" font-size="9" fill="#555" text-anchor="end">30</text>
+  <line x1="42" y1="84" x2="48" y2="84" stroke="#333" stroke-width="1"/>
+  <text x="40" y="87" font-size="9" fill="#555" text-anchor="end">40</text>
+  <line x1="42" y1="55" x2="48" y2="55" stroke="#333" stroke-width="1"/>
+  <text x="40" y="58" font-size="9" fill="#555" text-anchor="end">50</text>
+  <line x1="42" y1="26" x2="48" y2="26" stroke="#333" stroke-width="1"/>
+  <text x="40" y="29" font-size="9" fill="#555" text-anchor="end">60</text>
+
+  <!-- X-axis: output 0-110. Scale: 0 at x=45, 100 at x=230 => 185px for 100 units -->
+  <line x1="230" y1="197" x2="230" y2="203" stroke="#333" stroke-width="1"/>
+  <text x="230" y="213" font-size="9" fill="#555" text-anchor="middle">100</text>
+
+  <!-- Fixed Cost line: horizontal at $10k (y=171), from x=45 to x=245 -->
+  <line x1="45" y1="171" x2="245" y2="171" stroke="#1a73e8" stroke-width="1.8" stroke-dasharray="6,3"/>
+  <text x="248" y="174" font-size="10" fill="#1a73e8" font-weight="bold">FC</text>
+
+  <!-- Total Cost line: starts at (x=45, y=171) at output 0 (FC=$10k), rises to (x=230, y=26) at output 100 (TC=$60k) -->
+  <line x1="45" y1="171" x2="230" y2="26" stroke="#e53935" stroke-width="2"/>
+  <text x="233" y="24" font-size="10" fill="#e53935" font-weight="bold">TC</text>
+
+  <!-- Highlight at output=100: vertical dashed to TC point -->
+  <line x1="230" y1="26" x2="230" y2="200" stroke="#888" stroke-width="1" stroke-dasharray="4,3"/>
+
+  <!-- Variable cost bracket at output 100: from y=171 (FC) to y=26 (TC) -->
+  <line x1="238" y1="171" x2="238" y2="26" stroke="#2e7d32" stroke-width="1.5"/>
+  <line x1="235" y1="171" x2="241" y2="171" stroke="#2e7d32" stroke-width="1.5"/>
+  <line x1="235" y1="26" x2="241" y2="26" stroke="#2e7d32" stroke-width="1.5"/>
+  <text x="254" y="100" font-size="9" fill="#2e7d32" text-anchor="middle">TVC</text>
+  <text x="254" y="111" font-size="9" fill="#2e7d32" text-anchor="middle">=$50k</text>
+
+  <!-- Point dot at TC=100 -->
+  <circle cx="230" cy="26" r="4" fill="#e53935"/>
+</svg></div>`;
+
+const questions=[
+  {year:"Oct/Nov 2025",text:"The table shows how household spending changes with income. At what income level does saving first become positive? (Hint: saving = income − spending)",options:["$4,000","$4,600","$4,900","$5,200"],answer:3},
+  {year:"Oct/Nov 2025",text:"The wages of school teachers are rising. What is least likely to be the cause of this?",options:["decreased membership of teaching trade unions","increased awareness among parents about the importance of education","more restrictions on the immigration of teachers from other countries","the opening of new schools by the government"],answer:0},
+  {year:"Oct/Nov 2025",text:"What is a feature of every trade union?",options:["members are unskilled workers","members use collective bargaining","members work for the same employer","members work in the same industry"],answer:1},
+  {year:"Oct/Nov 2025",text:"What must occur if a firm experiences economies of scale?",options:["average costs decrease","profits decrease","the number of workers increases","total advertising costs decrease"],answer:0},
+  {year:"Oct/Nov 2025",text:"The diagram shows the costs of a firm. What is the firm's total variable cost at an output of 100 units?",options:["$100","$500","$10,000","$50,000"],answer:3,svg:SVG_COST},
+  {year:"Oct/Nov 2025",text:"If the average revenue of a firm increases from $4 to $5 and quantity demanded decreases from 20 units to 10 units, what will be the effect on the firm's total revenue?",options:["decreases by $20","decreases by $30","increases by $20","increases by $30"],answer:1}
+];
+
+let order=[...Array(questions.length).keys()].sort(()=>Math.random()-0.5);
+let current=0,score=0,answered=new Array(questions.length).fill(null),selected=new Array(questions.length).fill(null);
+function render(){
+  const qi=order[current],q=questions[qi],total=questions.length;
+  document.getElementById('q-counter').textContent=`Question ${current+1} of ${total}`;
+  document.getElementById('score-live').textContent=`Score: ${score}`;
+  document.getElementById('progress-fill').style.width=`${(current/total)*100}%`;
+  document.getElementById('q-label').textContent=`Q${current+1}`;
+  document.getElementById('q-year').textContent=q.year;
+  document.getElementById('q-text').textContent=q.text;
+  document.getElementById('q-diagram').innerHTML=q.svg||'';
+  const optEl=document.getElementById('options');optEl.innerHTML='';
+  ['A','B','C','D'].forEach((l,i)=>{
+    const btn=document.createElement('button');btn.className='option';
+    btn.innerHTML=`<span class="option-letter">${l}</span><span>${q.options[i]}</span>`;
+    btn.onclick=()=>choose(i);
+    if(answered[current]!==null){btn.disabled=true;if(i===q.answer)btn.classList.add('correct');else if(i===selected[current])btn.classList.add('wrong');}
+    optEl.appendChild(btn);
+  });
+  const fb=document.getElementById('feedback');
+  if(answered[current]!==null){fb.className='feedback show '+(answered[current]?'correct-fb':'wrong-fb');fb.textContent=answered[current]?'✓ Correct! Well done.':'✗ The correct answer is '+['A','B','C','D'][q.answer]+': '+q.options[q.answer];}
+  else{fb.className='feedback';fb.textContent='';}
+  document.getElementById('btn-prev').style.visibility=current>0?'visible':'hidden';
+  const nb=document.getElementById('btn-next');nb.textContent=current===total-1?'See Results':'Next →';nb.disabled=answered[current]===null;
+}
+function choose(i){if(answered[current]!==null)return;selected[current]=i;answered[current]=i===questions[order[current]].answer;if(answered[current])score++;render();}
+function nextQ(){if(current<questions.length-1){current++;render();}else showResults();}
+function prevQ(){if(current>0){current--;render();}}
+function showResults(){
+  document.getElementById('quiz-container').style.display='none';
+  document.getElementById('score-screen').classList.add('show');
+  const total=questions.length,pct=Math.round((score/total)*100);
+  document.getElementById('final-score').textContent=score;document.getElementById('final-total').textContent=`/ ${total}`;
+  document.getElementById('score-title').textContent=pct===100?'Perfect Score!':pct>=70?'Great Work!':pct>=40?'Keep Practising':'Keep Going!';
+  document.getElementById('score-msg').textContent=`You scored ${score} out of ${total} (${pct}%) on ${TOPIC}.`;
+  const rl=document.getElementById('review-list');rl.innerHTML='';
+  order.forEach((qi,idx)=>{const q=questions[qi];const div=document.createElement('div');div.className='review-item';div.innerHTML=`<div class="dot ${answered[idx]?'g':'r'}"></div><div class="review-q">${q.text.slice(0,80)}${q.text.length>80?'…':''}</div><div class="review-ans">Ans: ${['A','B','C','D'][q.answer]}</div>`;rl.appendChild(div);});
+}
+function restart(){order=[...Array(questions.length).keys()].sort(()=>Math.random()-0.5);current=0;score=0;answered=new Array(questions.length).fill(null);selected=new Array(questions.length).fill(null);document.getElementById('quiz-container').style.display='flex';document.getElementById('score-screen').classList.remove('show');render();}
+render();
+</script>
+</body>
+</html>
