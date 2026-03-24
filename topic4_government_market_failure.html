@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Econ Sparks – Government and Market Failure</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --teal:      #2aab8a;
+    --teal-dark: #1d8a6e;
+    --teal-deep: #0f5c49;
+    --teal-lt:   #f0faf7;
+    --teal-mid:  #d4f0e8;
+    --border:    #c8e8e0;
+    --text:      #0d2b22;
+    --muted:     #5a8a7a;
+    --white:     #ffffff;
+    --surface:   #f7fdfa;
+    --green-ok:  #1a7d52;
+    --green-ok-lt:#e6f5ee;
+    --red:       #c0392b;
+    --red-lt:    #fdecea;
+    --radius:    12px;
+  }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--surface);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 0 0 64px;
+  }
+  /* Top bar matching site header */
+  .topbar {
+    width: 100%; background: var(--teal);
+    padding: 16px 32px; display: flex; align-items: center; gap: 14px;
+    margin-bottom: 44px;
+    box-shadow: 0 2px 12px rgba(13,92,73,0.18);
+  }
+  .topbar-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; color: #fff; font-weight: 700; letter-spacing: 0.01em;
+  }
+  .topbar-divider { width: 1px; height: 18px; background: rgba(255,255,255,0.3); }
+  .topbar-topic { font-size: 12.5px; color: rgba(255,255,255,0.75); font-weight: 400; }
+  header { text-align: center; margin-bottom: 32px; padding: 0 16px; }
+  .tag {
+    display: inline-block; background: var(--teal-mid); color: var(--teal-deep);
+    font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 4px 14px; border-radius: 20px; margin-bottom: 12px;
+    border: 1px solid var(--border);
+  }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(24px, 5vw, 38px); color: var(--teal-deep);
+    line-height: 1.2; margin-bottom: 8px; font-weight: 700;
+  }
+  .subtitle { color: var(--muted); font-size: 14px; }
+  .progress-wrap { width: 100%; max-width: 660px; margin-bottom: 22px; padding: 0 16px; }
+  .progress-info { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 8px; font-weight: 500; }
+  .score-badge { background: var(--teal-mid); color: var(--teal-deep); border: 1px solid var(--border); padding: 2px 10px; border-radius: 20px; font-weight: 600; font-size: 12px; }
+  .progress-track { height: 4px; background: var(--teal-mid); border-radius: 4px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--teal); border-radius: 4px; transition: width 0.5s ease; }
+  .card {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 36px 36px 28px;
+    width: 100%; max-width: 660px; margin: 0 16px 20px;
+    box-shadow: 0 2px 20px rgba(42,171,138,0.08);
+  }
+  .q-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+  .q-num {
+    background: var(--teal); color: #fff;
+    font-size: 10px; font-weight: 700; padding: 3px 12px;
+    border-radius: 20px; letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  .q-year { color: var(--muted); font-size: 11px; font-weight: 500; }
+  .q-text { font-size: 15.5px; line-height: 1.7; color: var(--text); margin-bottom: 22px; }
+  .diagram-wrap {
+    background: var(--teal-lt); border: 1px solid var(--border);
+    border-radius: 10px; padding: 20px; margin-bottom: 22px;
+    display: flex; justify-content: center; align-items: center;
+  }
+  .options { display: flex; flex-direction: column; gap: 9px; }
+  .option {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 13px 16px; border-radius: 9px;
+    border: 1.5px solid var(--border); background: var(--white);
+    cursor: pointer; transition: all 0.15s ease;
+    text-align: left; width: 100%;
+    font-family: 'Inter', sans-serif; color: var(--text);
+    font-size: 14.5px; line-height: 1.55;
+  }
+  .option:hover:not(:disabled) { border-color: var(--teal); background: var(--teal-lt); }
+  .option-letter {
+    width: 26px; height: 26px; min-width: 26px; border-radius: 50%;
+    border: 1.5px solid var(--border); background: var(--surface);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: var(--muted);
+    transition: all 0.15s ease; margin-top: 1px;
+  }
+  .option.correct { border-color: var(--green-ok); background: var(--green-ok-lt); }
+  .option.correct .option-letter { background: var(--green-ok); color: #fff; border-color: var(--green-ok); }
+  .option.wrong { border-color: var(--red); background: var(--red-lt); }
+  .option.wrong .option-letter { background: var(--red); color: #fff; border-color: var(--red); }
+  .option:disabled { cursor: default; }
+  .feedback { margin-top: 16px; padding: 13px 16px; border-radius: 9px; font-size: 13.5px; line-height: 1.55; display: none; font-weight: 500; }
+  .feedback.show { display: block; }
+  .feedback.correct-fb { background: var(--green-ok-lt); border: 1px solid rgba(26,125,82,0.25); color: var(--green-ok); }
+  .feedback.wrong-fb { background: var(--red-lt); border: 1px solid rgba(192,57,43,0.25); color: var(--red); }
+  .nav { display: flex; gap: 12px; width: 100%; max-width: 660px; justify-content: space-between; align-items: center; padding: 0 16px; }
+  .btn { padding: 11px 28px; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 13.5px; font-weight: 600; cursor: pointer; border: none; transition: all 0.15s ease; }
+  .btn-primary { background: var(--teal); color: #fff; }
+  .btn-primary:hover { background: var(--teal-dark); }
+  .btn-primary:disabled { background: var(--border); color: var(--muted); cursor: default; }
+  .btn-ghost { background: transparent; color: var(--muted); border: 1.5px solid var(--border); }
+  .btn-ghost:hover { color: var(--teal-deep); border-color: var(--teal); }
+  .score-screen { text-align: center; width: 100%; max-width: 660px; padding: 0 16px; display: none; }
+  .score-screen.show { display: block; }
+  .score-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 48px 36px 40px; box-shadow: 0 2px 20px rgba(42,171,138,0.08); margin-bottom: 20px; }
+  .score-circle { width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--teal); display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto 24px; background: var(--teal-lt); }
+  .score-number { font-family: 'Playfair Display', serif; font-size: 48px; color: var(--teal-deep); line-height: 1; font-weight: 700; }
+  .score-total { color: var(--muted); font-size: 13px; margin-top: 2px; }
+  .score-title { font-family: 'Playfair Display', serif; font-size: 30px; color: var(--teal-deep); margin-bottom: 8px; font-weight: 700; }
+  .score-msg { color: var(--muted); font-size: 14px; margin-bottom: 28px; line-height: 1.6; }
+  .divider { height: 1px; background: var(--border); margin: 20px 0; }
+  .review-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+  .review-list { text-align: left; margin-bottom: 28px; }
+  .review-item { display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-radius: 8px; margin-bottom: 7px; font-size: 13.5px; background: var(--surface); border: 1px solid var(--border); }
+  .dot { width: 9px; height: 9px; border-radius: 50%; min-width: 9px; }
+  .dot.g { background: var(--green-ok); } .dot.r { background: var(--red); }
+  .review-q { flex: 1; color: var(--text); } .review-ans { font-size: 11px; color: var(--muted); font-weight: 600; background: var(--teal-mid); padding: 2px 8px; border-radius: 10px; white-space: nowrap; }
+  #quiz-container { width: 100%; display: flex; flex-direction: column; align-items: center; }
+  footer { margin-top: 20px; font-size: 11px; color: var(--muted); opacity: 0.7; }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-logo">Econ Sparks</div>
+  <div class="topbar-divider"></div>
+  <div class="topbar-topic">Topic 4 · Government and Market Failure</div>
+</div>
+<header>
+  <div class="tag">Topic 4</div>
+  <h1>Government and Market Failure</h1>
+  <p class="subtitle">IGCSE Economics &middot; Past Paper Questions</p>
+</header>
+<div id="quiz-container">
+  <div class="progress-wrap">
+    <div class="progress-info">
+      <span id="q-counter">Question 1 of 4</span>
+      <span class="score-badge" id="score-badge">Score: 0</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  </div>
+  <div class="card">
+    <div class="q-meta"><span class="q-num" id="q-label">Q1</span><span class="q-year" id="q-year"></span></div>
+    <p class="q-text" id="q-text"></p>
+    <div id="q-diagram"></div>
+    <div class="options" id="options"></div>
+    <div class="feedback" id="feedback"></div>
+  </div>
+  <div class="nav">
+    <button class="btn btn-ghost" id="btn-prev" onclick="prevQ()">← Previous</button>
+    <button class="btn btn-primary" id="btn-next" onclick="nextQ()" disabled>Next →</button>
+  </div>
+</div>
+<div class="score-screen" id="score-screen">
+  <div class="score-card">
+    <div class="score-circle">
+      <div class="score-number" id="final-score">0</div>
+      <div class="score-total" id="final-total">/ 4</div>
+    </div>
+    <h2 class="score-title" id="score-title"></h2>
+    <p class="score-msg" id="score-msg"></p>
+    <p style="font-size:28px;font-weight:700;color:var(--teal);margin-bottom:8px" id="score-pct"></p>
+    <div class="divider"></div>
+    <div class="review-label">Question review</div>
+    <div class="review-list" id="review-list"></div>
+    <button class="btn btn-primary" onclick="restart()">Try Again</button>
+  </div>
+</div>
+<footer>Econ Sparks &middot; Created by Benjamin Sam &middot; IGCSE Economics 0455</footer>
+<script>
+const TOPIC = "Government and Market Failure";
+const questions = [
+  {
+    "year": "Oct/Nov 2025",
+    "text": "What are two macroeconomic aims of government?",
+    "options": [
+      "to allocate resources and reduce trade union membership",
+      "to create economic growth and prevent high inflation",
+      "to raise interest rates and reduce pollution",
+      "to reduce exports and increase imports"
+    ],
+    "answer": 1
+  },
+  {
+    "year": "Oct/Nov 2025",
+    "text": "A government's spending equals its revenue. The government decides to decrease spending. What is the most likely effect in the short run?",
+    "options": [
+      "a budget deficit",
+      "a budget surplus",
+      "an increase in output",
+      "an increase in tax revenue"
+    ],
+    "answer": 1
+  },
+  {
+    "year": "Oct/Nov 2025",
+    "text": "What is not a monetary policy measure?",
+    "options": [
+      "changes in income tax rates",
+      "changes in interest rates",
+      "changes in the exchange rate",
+      "changes in the money supply"
+    ],
+    "answer": 0
+  },
+  {
+    "year": "Oct/Nov 2025",
+    "text": "Which government action would not be included as part of a supply-side policy?",
+    "options": [
+      "increasing the privatisation of industries",
+      "lowering national minimum wage rates",
+      "raising tariffs on international trade",
+      "reducing state benefits"
+    ],
+    "answer": 2
+  }
+];
+
+let order=[...Array(questions.length).keys()].sort(()=>Math.random()-0.5);
+let current=0,score=0,answered=new Array(questions.length).fill(null),selected=new Array(questions.length).fill(null);
+function render(){
+  const qi=order[current],q=questions[qi],total=questions.length;
+  document.getElementById('q-counter').textContent='Question '+(current+1)+' of '+total;
+  document.getElementById('score-badge').textContent='Score: '+score;
+  document.getElementById('progress-fill').style.width=((current/total)*100)+'%';
+  document.getElementById('q-label').textContent='Q'+(current+1);
+  document.getElementById('q-year').textContent=q.year;
+  document.getElementById('q-text').textContent=q.text;
+  document.getElementById('q-diagram').innerHTML=q.svg||'';
+  const optEl=document.getElementById('options');optEl.innerHTML='';
+  ['A','B','C','D'].forEach((l,i)=>{
+    const btn=document.createElement('button');btn.className='option';
+    btn.innerHTML='<span class="option-letter">'+l+'</span><span>'+q.options[i]+'</span>';
+    btn.onclick=()=>choose(i);
+    if(answered[current]!==null){btn.disabled=true;if(i===q.answer)btn.classList.add('correct');else if(i===selected[current])btn.classList.add('wrong');}
+    optEl.appendChild(btn);
+  });
+  const fb=document.getElementById('feedback');
+  if(answered[current]!==null){
+    fb.className='feedback show '+(answered[current]?'correct-fb':'wrong-fb');
+    fb.textContent=answered[current]?'✓ Correct! Well done.':'✗ Correct answer: '+['A','B','C','D'][q.answer]+' — '+q.options[q.answer];
+  } else {fb.className='feedback';fb.textContent='';}
+  document.getElementById('btn-prev').style.visibility=current>0?'visible':'hidden';
+  const nb=document.getElementById('btn-next');
+  nb.textContent=current===total-1?'See Results →':'Next →';
+  nb.disabled=answered[current]===null;
+}
+function choose(i){if(answered[current]!==null)return;selected[current]=i;answered[current]=i===questions[order[current]].answer;if(answered[current])score++;render();}
+function nextQ(){if(current<questions.length-1){current++;render();}else showResults();}
+function prevQ(){if(current>0){current--;render();}}
+function showResults(){
+  document.getElementById('quiz-container').style.display='none';
+  document.getElementById('score-screen').classList.add('show');
+  const total=questions.length,pct=Math.round((score/total)*100);
+  document.getElementById('final-score').textContent=score;
+  document.getElementById('final-total').textContent='/ '+total;
+  document.getElementById('score-pct').textContent=pct+'%';
+  document.getElementById('score-title').textContent=pct===100?'Perfect Score!':pct>=70?'Great Work!':pct>=40?'Keep Practising':'Keep Going!';
+  document.getElementById('score-msg').textContent='You scored '+score+' out of '+total+' ('+pct+'%) on '+TOPIC+'.';
+  const rl=document.getElementById('review-list');rl.innerHTML='';
+  order.forEach((qi,idx)=>{
+    const q=questions[qi],letters=['A','B','C','D'];
+    const div=document.createElement('div');div.className='review-item';
+    div.innerHTML='<div class="dot '+(answered[idx]?'g':'r')+'"></div><div class="review-q">'+q.text.slice(0,72)+(q.text.length>72?'…':'')+'</div><div class="review-ans">'+letters[q.answer]+'</div>';
+    rl.appendChild(div);
+  });
+}
+function restart(){
+  order=[...Array(questions.length).keys()].sort(()=>Math.random()-0.5);
+  current=0;score=0;
+  answered=new Array(questions.length).fill(null);
+  selected=new Array(questions.length).fill(null);
+  document.getElementById('quiz-container').style.display='flex';
+  document.getElementById('score-screen').classList.remove('show');
+  render();
+}
+render();
+
+</script>
+</body>
+</html>
